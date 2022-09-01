@@ -1,4 +1,4 @@
-package com.example.list.data
+package com.example.list.data.api
 
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory

@@ -3,7 +3,7 @@ package com.example.list.presentation.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.list.data.PokemonResponseDTO
+import com.example.list.data.model.PokemonResponseDTO
 import com.example.list.domain.GetPokemonUseCase
 import com.example.list.presentation.viewdata.PokemonViewState
 import io.reactivex.android.schedulers.AndroidSchedulers
