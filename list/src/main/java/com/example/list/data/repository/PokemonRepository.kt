@@ -7,9 +7,11 @@ import com.example.list.data.api.PokemonApi
 class PokemonRepository {
     private val pokemonApi: PokemonApi = ApiBuilder.api
 
-    fun getPokemon() = pokemonApi.getPokemon(limit = 50)
+    fun getPokemons() = pokemonApi.getPokemons(limit = 50)
         .map { it.body() }
         .doOnError {
             Log.e("Error", it.localizedMessage)
         }
+
+    fun getPokemon(name: String) = pokemonApi.getPokemon(name)
 }

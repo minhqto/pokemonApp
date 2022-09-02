@@ -4,8 +4,11 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.list.presentation.viewdata.PokemonViewState
+import com.example.list.presentation.viewmodel.PokemonListViewModel
 
-class PokemonListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PokemonListAdapter(
+    private val viewModel: PokemonListViewModel
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var data: List<PokemonViewState> = emptyList()
         set(value) {
@@ -18,7 +21,7 @@ class PokemonListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             (holder as PokemonViewHolder).pokemonItemComposeView.setContent {
-                PokemonRowCell(pokemonViewState = data[position])
+                PokemonRowCell(pokemonViewState = data[position], onClick = { viewModel.handleClick(it) })
             }
     }
 
