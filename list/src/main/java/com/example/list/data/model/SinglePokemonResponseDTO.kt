@@ -3,6 +3,7 @@ package com.example.list.data.model
 import com.google.gson.annotations.SerializedName
 
 data class SinglePokemonResponseDTO(
+    @SerializedName("name") val name: String,
     @SerializedName("base_experience") val baseExperience: String,
     @SerializedName("weight") val weight: Long,
     @SerializedName("abilities") val abilities: List<PokemonAbilitiesDTO>

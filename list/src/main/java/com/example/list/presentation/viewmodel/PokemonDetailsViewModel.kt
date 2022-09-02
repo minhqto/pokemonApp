@@ -2,8 +2,10 @@ package com.example.list.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.example.list.data.model.SinglePokemonResponseDTO
 import com.example.list.domain.GetPokemonUseCase
 import com.example.list.domain.GetPokemonsUseCase
+import com.example.list.presentation.viewdata.Ability
 import com.example.list.presentation.viewdata.PokemonDetailViewState
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,7 +19,7 @@ class PokemonDetailsViewModel : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val _state = MutableStateFlow(PokemonDetailViewState(""))
+    private val _state = MutableStateFlow(PokemonDetailViewState())
 
     val state: StateFlow<PokemonDetailViewState> = _state
 
@@ -26,13 +28,26 @@ class PokemonDetailsViewModel : ViewModel() {
             .execute(pokemonName)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
-            .map { it }
+            .map { mapToPresentation(it) }
             .subscribe({
-                   Log.v("Minh", it.weight.toString())
-//                _state.value = PokemonDetailViewState(name = it?)
+                _state.value = it
             }, {})
             .let {
                 compositeDisposable.add(it)
             }
     }
+
+    private fun mapToPresentation(singlePokemonResponseDTO: SinglePokemonResponseDTO) =
+        PokemonDetailViewState(
+            name = singlePokemonResponseDTO.name,
+            baseExperience = singlePokemonResponseDTO.baseExperience,
+            weight = singlePokemonResponseDTO.weight,
+            abilities = singlePokemonResponseDTO.abilities.map { abilityDTO ->
+                Ability(
+                    skillName = abilityDTO.ability.name,
+                    isHidden = abilityDTO.isHidden,
+                    slot = abilityDTO.slot
+                )
+            }
+        )
 }
