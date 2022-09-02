@@ -2,7 +2,7 @@ package com.example.list.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class PokemonResponseDTO(
+data class PokemonsResponseDTO(
     @SerializedName("count") val count: Long,
     @SerializedName("next") val next: String,
     @SerializedName("previous") val previous: String,

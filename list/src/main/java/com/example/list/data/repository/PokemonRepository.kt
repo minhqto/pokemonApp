@@ -14,4 +14,8 @@ class PokemonRepository {
         }
 
     fun getPokemon(name: String) = pokemonApi.getPokemon(name)
+        .map { it.body() }
+        .doOnError {
+            Log.e("Error", it.localizedMessage)
+        }
 }
