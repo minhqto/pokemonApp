@@ -3,7 +3,6 @@ package com.example.list.presentation.view
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.list.R
 import com.example.list.databinding.ActivityListBinding
