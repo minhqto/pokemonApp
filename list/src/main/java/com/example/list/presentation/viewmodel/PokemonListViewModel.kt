@@ -15,10 +15,10 @@ class PokemonListViewModel : ViewModel() {
 
     private val getPokemonsUseCase = GetPokemonsUseCase()
 
+    private val intentSubject: PublishSubject<ViewIntent> = PublishSubject.create()
+
     val viewState: Flowable<ViewState>
     val viewEffects: Flowable<ViewEffect>
-
-    private val intentSubject: PublishSubject<ViewIntent> = PublishSubject.create()
 
     init {
         val results: Flowable<ViewResult> = intentToResult(
