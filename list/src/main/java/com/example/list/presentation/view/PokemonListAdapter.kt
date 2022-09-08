@@ -21,7 +21,7 @@ class PokemonListAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             (holder as PokemonViewHolder).pokemonItemComposeView.setContent {
-                PokemonRowCell(pokemonCellViewState = data[position], onClick = { viewModel.handleClick(it) })
+                PokemonRowCell(pokemonCellViewState = data[position], onClick = { viewModel.process(PokemonListViewModel.ViewIntent.OpenPokemonDetails(it)) })
             }
     }
 

@@ -9,7 +9,9 @@ import com.example.list.R
 import com.example.list.databinding.ActivityListBinding
 import com.example.list.presentation.view.PokemonDetailsActivity.Companion.POKEMON_DETAILS
 import com.example.list.presentation.viewmodel.PokemonListViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
 class PokemonListActivity : AppCompatActivity() {
 
@@ -31,6 +33,7 @@ class PokemonListActivity : AppCompatActivity() {
         adapter = PokemonListAdapter(viewModel = pokemonListViewModel)
 
         subscribeViewState()
+        subscribeViewEffects()
         setupRecyclerView()
 
         pokemonListViewModel.process(PokemonListViewModel.ViewIntent.LoadPokemon)
@@ -45,19 +48,28 @@ class PokemonListActivity : AppCompatActivity() {
             .let {
                 compositeDisposable.add(it)
             }
+    }
 
+    private fun subscribeViewEffects() {
         pokemonListViewModel
-            .openPageEvent
-            .observe(this) { pageDetails ->
-                when (pageDetails.pageType) {
-                    PageType.POKEMON_DETAIL_PAGE -> {
+            .viewEffects
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe { viewEffect ->
+                when (viewEffect) {
+                    is PokemonListViewModel.ViewEffect.ShowPokemonDetails -> {
                         val pokemonDetailIntent = Intent(this, PokemonDetailsActivity::class.java)
-                        pokemonDetailIntent.putExtra(POKEMON_DETAILS, pageDetails.name)
+                        pokemonDetailIntent.putExtra(POKEMON_DETAILS, viewEffect.pokemonName)
                         startActivity(pokemonDetailIntent)
                     }
+                    else -> { }
                 }
             }
+            .let {
+                compositeDisposable.add(it)
+            }
     }
+
     private fun setupRecyclerView() = binding.pokemonList.run {
             layoutManager = LinearLayoutManager(context)
             adapter = this@PokemonListActivity.adapter
