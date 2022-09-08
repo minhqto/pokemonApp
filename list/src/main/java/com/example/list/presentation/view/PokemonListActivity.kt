@@ -1,11 +1,13 @@
 package com.example.list.presentation.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.list.R
 import com.example.list.databinding.ActivityListBinding
+import com.example.list.presentation.view.PokemonDetailsActivity.Companion.POKEMON_DETAILS
 import com.example.list.presentation.viewmodel.PokemonListViewModel
 
 class PokemonListActivity : AppCompatActivity() {
@@ -42,12 +44,9 @@ class PokemonListActivity : AppCompatActivity() {
             .observe(this) { pageDetails ->
                 when (pageDetails.pageType) {
                     PageType.POKEMON_DETAIL_PAGE -> {
-                        supportFragmentManager.setFragmentResult("requestKey", bundleOf("bundleKey" to pageDetails.name))
-                        supportFragmentManager.beginTransaction()
-                            .setCustomAnimations(androidx.fragment.R.animator.fragment_fade_enter, androidx.fragment.R.animator.fragment_fade_exit)
-                            .add(R.id.fragment_container, PokemonDetailsFragment())
-                            .addToBackStack(null)
-                            .commit()
+                        val pokemonDetailIntent = Intent(this, PokemonDetailsActivity::class.java)
+                        pokemonDetailIntent.putExtra(POKEMON_DETAILS, pageDetails.name)
+                        startActivity(pokemonDetailIntent)
                     }
                 }
             }

@@ -30,7 +30,6 @@
         <activity android:name="com.example.list.presentation.view.PokemonListActivity">
 
         </activity>
-
     </application>
 
 </manifest>

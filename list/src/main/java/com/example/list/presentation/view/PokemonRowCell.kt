@@ -3,8 +3,10 @@ package com.example.list.presentation.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.material.Text
@@ -20,17 +22,15 @@ fun PokemonRowCell(
 ) {
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = 2.dp)
             .background(Color.White)
-            .clickable {
-                onClick(pokemonCellViewState.name)
-            }
-
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable { onClick(pokemonCellViewState.name) }
     ) {
         Text(
             modifier = Modifier.padding(8.dp),
             text = pokemonCellViewState.name
         )
     }
+    Divider(color = Color.Black)
 }

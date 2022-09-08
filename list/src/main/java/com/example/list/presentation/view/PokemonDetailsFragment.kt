@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.list.databinding.FragmentPokemonDetailBinding
+import com.example.list.presentation.view.PokemonDetailsActivity.Companion.BUNDLE_KEY
+import com.example.list.presentation.view.PokemonDetailsActivity.Companion.REQUEST_KEY
 import com.example.list.presentation.viewdata.PokemonDetailViewState
 import com.example.list.presentation.viewmodel.PokemonDetailsViewModel
 
@@ -35,8 +37,8 @@ class PokemonDetailsFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(PokemonDetailsViewModel::class.java)
 
-        parentFragmentManager.setFragmentResultListener("requestKey", this) { _, bundle ->
-            bundle.getString("bundleKey")?.let {
+        parentFragmentManager.setFragmentResultListener(REQUEST_KEY, this) { _, bundle ->
+            bundle.getString(BUNDLE_KEY)?.let {
                 viewModel.getPokemonDetails(pokemonName = it)
             }
         }
