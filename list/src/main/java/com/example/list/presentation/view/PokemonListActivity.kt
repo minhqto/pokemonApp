@@ -9,6 +9,7 @@ import com.example.list.R
 import com.example.list.databinding.ActivityListBinding
 import com.example.list.presentation.view.PokemonDetailsActivity.Companion.POKEMON_DETAILS
 import com.example.list.presentation.viewmodel.PokemonListViewModel
+import io.reactivex.disposables.CompositeDisposable
 
 class PokemonListActivity : AppCompatActivity() {
 
@@ -18,25 +19,31 @@ class PokemonListActivity : AppCompatActivity() {
 
     private lateinit var pokemonListViewModel: PokemonListViewModel
 
+    private val compositeDisposable = CompositeDisposable()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityListBinding.inflate(layoutInflater)
 
         pokemonListViewModel = PokemonListViewModel()
-        pokemonListViewModel.getPokemons()
 
         setContentView(binding.root)
         adapter = PokemonListAdapter(viewModel = pokemonListViewModel)
 
         subscribeViewState()
         setupRecyclerView()
+
+        pokemonListViewModel.process(PokemonListViewModel.ViewIntent.LoadPokemon)
     }
 
     private fun subscribeViewState() {
         pokemonListViewModel
-            .state
-            .observe(this) { pokemonViewState ->
-                adapter.data = pokemonViewState
+            .viewState
+            .subscribe {
+                adapter.data = it.pokemons
+            }
+            .let {
+                compositeDisposable.add(it)
             }
 
         pokemonListViewModel
