@@ -11,7 +11,7 @@ import retrofit2.http.Query
 interface PokemonApi {
 
     @GET("pokemon")
-    fun getPokemons(@Query("limit") limit: Long? = null): Single<Response<PokemonsResponseDTO>>
+    fun  getPokemons(@Query("limit") limit: Long? = null): Single<Response<PokemonsResponseDTO>>
 
     @GET("pokemon/{${POKEMON_NAME}}")
     fun getPokemon(@Path(POKEMON_NAME) name: String): Single<Response<SinglePokemonResponseDTO>>

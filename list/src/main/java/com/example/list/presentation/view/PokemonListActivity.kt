@@ -2,8 +2,10 @@ package com.example.list.presentation.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.list.R
 import com.example.list.databinding.ActivityListBinding
@@ -44,6 +46,7 @@ class PokemonListActivity : AppCompatActivity() {
             .viewState
             .subscribe {
                 adapter.data = it.pokemons
+                binding.progressSpinner.isVisible = it.isLoading
             }
             .let {
                 compositeDisposable.add(it)
@@ -62,6 +65,7 @@ class PokemonListActivity : AppCompatActivity() {
                         pokemonDetailIntent.putExtra(POKEMON_DETAILS, viewEffect.pokemonName)
                         startActivity(pokemonDetailIntent)
                     }
+                    is PokemonListViewModel.ViewEffect.ShowErrorToast -> Toast.makeText(this, "Error loading pokemon!", Toast.LENGTH_SHORT).show()
                     else -> { }
                 }
             }

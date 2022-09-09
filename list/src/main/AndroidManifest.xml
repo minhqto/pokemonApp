@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.example.list"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
     <application>
         <activity
             android:name="com.example.list.presentation.view.PokemonDetailsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Design.NoActionBar" >
+        </activity>
+
+        <activity
+            android:name="com.example.list.presentation.view.PokemonListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" >
+
         </activity>
     </application>
 </manifest>

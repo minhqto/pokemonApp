@@ -1,6 +1,5 @@
 package com.example.list.presentation.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.list.domain.GetPokemonsUseCase
 import com.example.list.domain.model.Pokemon
@@ -41,6 +40,8 @@ class PokemonListViewModel : ViewModel() {
     sealed class ViewResult {
         class PokemonLoaded(val pokemons: List<Pokemon>) : ViewResult()
         class PokemonDetailsOpened(val pokemonDetails: String) : ViewResult()
+        object PokemonLoading : ViewResult()
+        object LoadingError : ViewResult()
     }
 
     data class ViewState(
@@ -50,6 +51,7 @@ class PokemonListViewModel : ViewModel() {
 
     sealed class ViewEffect {
         class ShowPokemonDetails(val pokemonName: String) : ViewEffect()
+        object ShowErrorToast : ViewEffect()
         object None : ViewEffect()
     }
 
@@ -71,17 +73,22 @@ private fun intentToResult(
                 .subscribeOn(Schedulers.io())
                 .map { pokemonList ->
                     PokemonListViewModel.ViewResult.PokemonLoaded(
-                        pokemons = pokemonList
-                    )
+                        pokemons = pokemonList.sortedBy {
+                            it.name
+                        }
+                    ) as PokemonListViewModel.ViewResult
                 }
-                .doOnError {
-                    Log.v("ERROR", it.localizedMessage)
+                .onErrorReturn {
+                    PokemonListViewModel.ViewResult.LoadingError
                 }
+                .startWith(PokemonListViewModel.ViewResult.PokemonLoading)
         }
         is PokemonListViewModel.ViewIntent.OpenPokemonDetails -> {
-            Flowable.just(PokemonListViewModel.ViewResult.PokemonDetailsOpened(
-                pokemonDetails = intent.pokemonName
-            ))
+            Flowable.just(
+                PokemonListViewModel.ViewResult.PokemonDetailsOpened(
+                    pokemonDetails = intent.pokemonName
+                )
+            )
         }
     }
 }
@@ -93,8 +100,13 @@ private fun Flowable<PokemonListViewModel.ViewResult>.resultToViewState(
 ) { prevState, viewResult ->
     when (viewResult) {
         is PokemonListViewModel.ViewResult.PokemonLoaded -> {
-            prevState.copy(pokemons = pokemonPresentationMapper.mapToPresentation(viewResult.pokemons))
+            prevState.copy(
+                pokemons = pokemonPresentationMapper.mapToPresentation(viewResult.pokemons),
+                isLoading = false
+            )
         }
+        is PokemonListViewModel.ViewResult.PokemonLoading -> prevState.copy(isLoading = true)
+        is PokemonListViewModel.ViewResult.LoadingError -> prevState.copy(isLoading = false)
         else -> prevState
     }
 }
@@ -102,7 +114,10 @@ private fun Flowable<PokemonListViewModel.ViewResult>.resultToViewState(
 private fun Flowable<PokemonListViewModel.ViewResult>.resultToViewEffect(): Flowable<PokemonListViewModel.ViewEffect> =
     map { viewResult ->
         when (viewResult) {
-            is PokemonListViewModel.ViewResult.PokemonDetailsOpened -> PokemonListViewModel.ViewEffect.ShowPokemonDetails(viewResult.pokemonDetails)
+            is PokemonListViewModel.ViewResult.PokemonDetailsOpened -> PokemonListViewModel.ViewEffect.ShowPokemonDetails(
+                viewResult.pokemonDetails
+            )
+            is PokemonListViewModel.ViewResult.LoadingError -> PokemonListViewModel.ViewEffect.ShowErrorToast
             else -> PokemonListViewModel.ViewEffect.None
         }
     }
