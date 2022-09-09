@@ -1,7 +1,7 @@
 package com.example.list.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.list.domain.GetPokemonsUseCase
+import com.example.list.domain.usecase.GetPokemonsUseCase
 import com.example.list.domain.model.Pokemon
 import com.example.list.presentation.viewdata.PokemonCellViewState
 import io.reactivex.BackpressureStrategy
@@ -23,7 +23,7 @@ class PokemonListViewModel : ViewModel() {
         val results: Flowable<ViewResult> = intentToResult(
             intentSubject.toFlowable(BackpressureStrategy.LATEST),
             getPokemonsUseCase
-        ).share()
+        )
 
         viewState = results.resultToViewState(
             pokemonPresentationMapper = PokemonPresentationMapper()

@@ -1,9 +1,9 @@
-package com.example.list.domain
+package com.example.list.domain.usecase
 
 import com.example.list.data.repository.PokemonRepository
 
 class GetPokemonUseCase {
     private val pokemonRepository = PokemonRepository()
 
-    fun execute(name: String) = pokemonRepository.getPokemon(name)
+    suspend fun execute(name: String) = pokemonRepository.getPokemon(name).body()
 }

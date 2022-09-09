@@ -1,4 +1,4 @@
-package com.example.list.domain
+package com.example.list.domain.usecase
 
 import com.example.list.data.repository.PokemonRepository
 

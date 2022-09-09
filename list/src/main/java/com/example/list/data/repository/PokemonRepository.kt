@@ -19,11 +19,7 @@ class PokemonRepository {
             Log.e("Error", it.localizedMessage)
         }
 
-    fun getPokemon(name: String) = pokemonApi.getPokemon(name)
-        .map { it.body() }
-        .doOnError {
-            Log.e("Error", it.localizedMessage)
-        }
+    suspend fun getPokemon(name: String) = pokemonApi.getPokemon(name)
 }
 
 private fun mapToDomain(pokemonsResponseDTO: PokemonsResponseDTO): List<Pokemon> =
