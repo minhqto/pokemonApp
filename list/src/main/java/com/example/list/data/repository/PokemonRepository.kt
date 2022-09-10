@@ -6,17 +6,19 @@ import com.example.list.data.api.PokemonApi
 import com.example.list.data.model.PokemonsResponseDTO
 import com.example.list.domain.model.Pokemon
 
-class PokemonRepository {
+class PokemonRepository(
     private val pokemonApi: PokemonApi = ApiBuilder.api
+) {
 
     fun getPokemons() = pokemonApi.getPokemons(limit = 50)
         .map {
-            it.body()?.let { pokemonResponseDTO ->
-                mapToDomain(pokemonResponseDTO)
+            if (it.isSuccessful) {
+                it.body()?.let { pokemonResponseDTO ->
+                    mapToDomain(pokemonResponseDTO)
+                } ?: emptyList()
+            } else {
+                emptyList()
             }
-        }
-        .doOnError {
-            Log.e("Error", it.localizedMessage)
         }
 
     suspend fun getPokemon(name: String) = pokemonApi.getPokemon(name)
